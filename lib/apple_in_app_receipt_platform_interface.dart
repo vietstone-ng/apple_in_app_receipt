@@ -26,4 +26,8 @@ abstract class AppleInAppReceiptPlatform extends PlatformInterface {
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  Future<bool> verifySubscription(String productId) {
+    throw UnimplementedError('verifySubscription() has not been implemented.');
+  }
 }

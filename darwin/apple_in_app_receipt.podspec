@@ -21,10 +21,13 @@ A new Flutter plugin project.
   # s.dependency 'FlutterMacOS'
   # s.platform = :osx, '10.11'
 
-  s.ios.dependency 'Flutter'
-  s.osx.dependency 'FlutterMacOS'
   s.ios.deployment_target = '12.0'
   s.osx.deployment_target = '10.13'
+
+  s.ios.dependency 'Flutter'
+  s.osx.dependency 'FlutterMacOS'
+
+  s.dependency 'TPInAppReceipt'
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }

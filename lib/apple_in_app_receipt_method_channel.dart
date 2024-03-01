@@ -11,7 +11,17 @@ class MethodChannelAppleInAppReceipt extends AppleInAppReceiptPlatform {
 
   @override
   Future<String?> getPlatformVersion() async {
-    final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
+    final version =
+        await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
+  }
+
+  @override
+  Future<bool> verifySubscription(String productId) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'verifySubscription',
+      {'productId': productId},
+    );
+    return result ?? false;
   }
 }
