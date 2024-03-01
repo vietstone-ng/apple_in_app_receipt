@@ -32,8 +32,7 @@ public class AppleInAppReceiptPlugin: NSObject, FlutterPlugin {
     case "verifySubscription":
       let arguments = call.arguments as? [String: Any]
       let productId = arguments?["productId"] as? String ?? ""
-      let isSubscriptionActive = _verifySubscription(productId: productId)
-      result(isSubscriptionActive)
+      _verifySubscription(productId: productId, result: result)
     default:
       result(FlutterMethodNotImplemented)
     }
@@ -41,14 +40,19 @@ public class AppleInAppReceiptPlugin: NSObject, FlutterPlugin {
 }
 
 // verify by TPInAppReceipt
-private func _verifySubscription(productId: String) -> Bool {
-  
-  
-  if let receipt = try? InAppReceipt.localReceipt(),
-     let _ = try? receipt.validate()
-  {
-    let actives = receipt.activeAutoRenewableSubscriptionPurchases
-    return actives.contains { $0.productIdentifier == productId }
+private func _verifySubscription(productId: String, result: @escaping FlutterResult) {
+  func _verify() -> Bool {
+    if let receipt = try? InAppReceipt.localReceipt(),
+       let _ = try? receipt.validate()
+    {
+      let actives = receipt.activeAutoRenewableSubscriptionPurchases
+      return actives.contains { $0.productIdentifier == productId }
+    }
+    return false
   }
-  return false
+  
+  InAppReceipt.refresh { _ in
+    let isSubscriptionActive = _verify()
+    result(isSubscriptionActive)
+  }
 }
