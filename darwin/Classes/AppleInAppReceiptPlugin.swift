@@ -33,13 +33,20 @@ public class AppleInAppReceiptPlugin: NSObject, FlutterPlugin {
       let arguments = call.arguments as? [String: Any]
       let productId = arguments?["productId"] as? String ?? ""
       _verifySubscription(productId: productId, result: result)
+    case "verifyPurchase":
+      let arguments = call.arguments as? [String: Any]
+      let productId = arguments?["productId"] as? String ?? ""
+      _verifyPurchase(productId: productId, result: result)
+    case "hasActiveSubscription":
+      _hasActiveSubscription(result: result)
+    case "havePurchases":
+      _havePurchases(result: result)
     default:
       result(FlutterMethodNotImplemented)
     }
   }
 }
 
-// verify by TPInAppReceipt
 private func _verifySubscription(productId: String, result: @escaping FlutterResult) {
   func _verify() -> Bool {
     if let receipt = try? InAppReceipt.localReceipt(),
@@ -50,9 +57,53 @@ private func _verifySubscription(productId: String, result: @escaping FlutterRes
     }
     return false
   }
-  
+
   InAppReceipt.refresh { _ in
-    let isSubscriptionActive = _verify()
-    result(isSubscriptionActive)
+    result(_verify())
+  }
+}
+
+private func _verifyPurchase(productId: String, result: @escaping FlutterResult) {
+  func _verify() -> Bool {
+    if let receipt = try? InAppReceipt.localReceipt(),
+       let _ = try? receipt.validate()
+    {
+      return receipt.containsPurchase(ofProductIdentifier: productId)
+    }
+    return false
+  }
+
+  InAppReceipt.refresh { _ in
+    result(_verify())
+  }
+}
+
+private func _hasActiveSubscription(result: @escaping FlutterResult) {
+  func _verify() -> Bool {
+    if let receipt = try? InAppReceipt.localReceipt(),
+       let _ = try? receipt.validate()
+    {
+      return receipt.hasActiveAutoRenewablePurchases
+    }
+    return false
+  }
+
+  InAppReceipt.refresh { _ in
+    result(_verify())
+  }
+}
+
+private func _havePurchases(result: @escaping FlutterResult) {
+  func _verify() -> Bool {
+    if let receipt = try? InAppReceipt.localReceipt(),
+       let _ = try? receipt.validate()
+    {
+      return receipt.hasPurchases
+    }
+    return false
+  }
+
+  InAppReceipt.refresh { _ in
+    result(_verify())
   }
 }
