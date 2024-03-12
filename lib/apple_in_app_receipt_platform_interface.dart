@@ -30,4 +30,17 @@ abstract class AppleInAppReceiptPlatform extends PlatformInterface {
   Future<bool> verifySubscription(String productId) {
     throw UnimplementedError('verifySubscription() has not been implemented.');
   }
+
+  Future<bool> verifyPurchase(String productId) {
+    throw UnimplementedError('verifyPurchase() has not been implemented.');
+  }
+
+  Future<bool> haveActiveSubscription() {
+    throw UnimplementedError(
+        'haveActiveSubscription() has not been implemented.');
+  }
+
+  Future<bool> havePurchases() {
+    throw UnimplementedError('havePurchases() has not been implemented.');
+  }
 }

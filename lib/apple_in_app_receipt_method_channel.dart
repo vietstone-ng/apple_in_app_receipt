@@ -24,4 +24,29 @@ class MethodChannelAppleInAppReceipt extends AppleInAppReceiptPlatform {
     );
     return result ?? false;
   }
+
+  @override
+  Future<bool> verifyPurchase(String productId) async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'verifyPurchase',
+      {'productId': productId},
+    );
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> haveActiveSubscription() async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'hasActiveSubscription',
+    );
+    return result ?? false;
+  }
+
+  @override
+  Future<bool> havePurchases() async {
+    final result = await methodChannel.invokeMethod<bool>(
+      'havePurchases',
+    );
+    return result ?? false;
+  }
 }
