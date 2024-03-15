@@ -9,15 +9,15 @@ class AppleInAppReceipt {
     return AppleInAppReceiptPlatform.instance.verifySubscription(productId);
   }
 
-  Future<bool> verifyPurchase(String productId) {
-    return AppleInAppReceiptPlatform.instance.verifyPurchase(productId);
+  Future<bool> verifyLifetimePurchase(String productId) {
+    return AppleInAppReceiptPlatform.instance.verifyLifetimePurchase(productId);
   }
 
   Future<bool> haveActiveSubscription() {
     return AppleInAppReceiptPlatform.instance.haveActiveSubscription();
   }
 
-  Future<bool> havePurchases() {
-    return AppleInAppReceiptPlatform.instance.havePurchases();
+  Future<bool> hasActiveLifetimePurchase() {
+    return AppleInAppReceiptPlatform.instance.hasActiveLifetimePurchase();
   }
 }

@@ -26,9 +26,9 @@ class MethodChannelAppleInAppReceipt extends AppleInAppReceiptPlatform {
   }
 
   @override
-  Future<bool> verifyPurchase(String productId) async {
+  Future<bool> verifyLifetimePurchase(String productId) async {
     final result = await methodChannel.invokeMethod<bool>(
-      'verifyPurchase',
+      'verifyLifetimePurchase',
       {'productId': productId},
     );
     return result ?? false;
@@ -43,9 +43,9 @@ class MethodChannelAppleInAppReceipt extends AppleInAppReceiptPlatform {
   }
 
   @override
-  Future<bool> havePurchases() async {
+  Future<bool> hasActiveLifetimePurchase() async {
     final result = await methodChannel.invokeMethod<bool>(
-      'havePurchases',
+      'hasActiveLifetimePurchase',
     );
     return result ?? false;
   }

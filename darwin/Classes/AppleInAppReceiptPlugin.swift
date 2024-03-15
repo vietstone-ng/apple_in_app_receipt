@@ -33,14 +33,14 @@ public class AppleInAppReceiptPlugin: NSObject, FlutterPlugin {
       let arguments = call.arguments as? [String: Any]
       let productId = arguments?["productId"] as? String ?? ""
       _verifySubscription(productId: productId, result: result)
-    case "verifyPurchase":
+    case "verifyLifetimePurchase":
       let arguments = call.arguments as? [String: Any]
       let productId = arguments?["productId"] as? String ?? ""
-      _verifyPurchase(productId: productId, result: result)
+      _verifyLifetimePurchase(productId: productId, result: result)
     case "hasActiveSubscription":
       _hasActiveSubscription(result: result)
-    case "havePurchases":
-      _havePurchases(result: result)
+    case "hasActiveLifetimePurchase":
+      _hasActiveLifetimePurchase(result: result)
     default:
       result(FlutterMethodNotImplemented)
     }
@@ -63,12 +63,17 @@ private func _verifySubscription(productId: String, result: @escaping FlutterRes
   }
 }
 
-private func _verifyPurchase(productId: String, result: @escaping FlutterResult) {
+private func _verifyLifetimePurchase(productId: String, result: @escaping FlutterResult) {
   func _verify() -> Bool {
     if let receipt = try? InAppReceipt.localReceipt(),
        let _ = try? receipt.validate()
     {
-      return receipt.containsPurchase(ofProductIdentifier: productId)
+      let activeLifetimePurchases = receipt.purchases.filter {
+        $0.productType == .nonConsumable && $0.cancellationDate == nil
+      }
+      return activeLifetimePurchases.contains {
+        $0.productIdentifier == productId
+      }
     }
     return false
   }
@@ -93,12 +98,15 @@ private func _hasActiveSubscription(result: @escaping FlutterResult) {
   }
 }
 
-private func _havePurchases(result: @escaping FlutterResult) {
+private func _hasActiveLifetimePurchase(result: @escaping FlutterResult) {
   func _verify() -> Bool {
     if let receipt = try? InAppReceipt.localReceipt(),
        let _ = try? receipt.validate()
     {
-      return receipt.hasPurchases
+      let activeLifetimePurchases = receipt.purchases.filter {
+        $0.productType == .nonConsumable && $0.cancellationDate == nil
+      }
+      return !activeLifetimePurchases.isEmpty
     }
     return false
   }
